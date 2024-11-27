@@ -16,9 +16,41 @@ namespace F24Week12CodeFirstApproach
     /// </summary>
     public partial class MainWindow : Window
     {
+        SchoolContext db = new SchoolContext();
+
         public MainWindow()
         {
             InitializeComponent();
+            LoadStandardsInCombobox();
+        }
+
+        private void LoadStandardsInCombobox()
+        {
+            cmbStandard.ItemsSource = db.Standards.ToList();
+            cmbStandard.DisplayMemberPath = "StandardName";
+            cmbStandard.SelectedValuePath = "StandardId";
+        }
+
+        private void LoadStudentsInDataGrid()
+        {
+            grdStudents.ItemsSource = db.Students.ToList();
+        }
+
+        private void btnLoadStudents_Click(object sender, RoutedEventArgs e)
+        {
+            LoadStudentsInDataGrid();
+        }
+
+        private void btnInsert_Click(object sender, RoutedEventArgs e)
+        {
+            Student std = new Student();
+            std.StudentName = txtName.Text;
+            std.StandardId = (int)cmbStandard.SelectedValue;
+
+            db.Students.Add(std);
+            db.SaveChanges();
+
+            LoadStudentsInDataGrid();
         }
     }
 }
